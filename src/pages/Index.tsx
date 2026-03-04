@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { useScrollFade } from "@/hooks/use-scroll-fade";
 import {
   Code,
-  Database,
   Palette,
-  Globe,
-  Terminal,
-  GitBranch,
   ExternalLink,
   Linkedin,
   Github,
@@ -101,6 +98,15 @@ const AnimatedSubtitle = () => {
   );
 };
 
+const ScrollSection = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
+  const ref = useScrollFade();
+  return (
+    <div ref={ref} className={`scroll-fade-in ${className}`}>
+      {children}
+    </div>
+  );
+};
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -119,14 +125,14 @@ const Index = () => {
           <p className="mt-3 text-xl sm:text-2xl font-medium text-muted-foreground h-8">
             <AnimatedSubtitle />
           </p>
-          <p className="mt-4 max-w-lg mx-auto text-muted-foreground">
+          <p className="mt-4 max-w-lg mx-auto text-muted-foreground" style={{ fontFamily: "var(--font-body)" }}>
             Construyo experiencias digitales modernas, rápidas y accesibles. Apasionado por el
             código limpio y el diseño con propósito.
           </p>
         </div>
 
         {/* Projects */}
-        <section>
+        <ScrollSection>
           <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
             <Layers size={22} className="text-primary" />
             Proyectos
@@ -136,7 +142,7 @@ const Index = () => {
               <a
                 key={project.title}
                 href={project.link}
-                className="group rounded-2xl border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1"
+                className="group rounded-2xl border bg-card p-6 transition-all duration-300 hover:shadow-[0_0_24px_-4px_hsl(221_83%_53%/0.35)] hover:-translate-y-1"
               >
                 <div className="flex items-start justify-between">
                   <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
@@ -152,11 +158,7 @@ const Index = () => {
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="text-xs font-medium"
-                    >
+                    <Badge key={tag} variant="secondary" className="text-xs font-medium">
                       {tag}
                     </Badge>
                   ))}
@@ -164,20 +166,17 @@ const Index = () => {
               </a>
             ))}
           </div>
-        </section>
+        </ScrollSection>
 
         {/* Skills */}
-        <section>
+        <ScrollSection>
           <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
             <Code size={22} className="text-primary" />
             Habilidades
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {skillCategories.map((category) => (
-              <div
-                key={category.name}
-                className="rounded-2xl border bg-card p-6"
-              >
+              <div key={category.name} className="rounded-2xl border bg-card p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <category.icon size={18} className="text-primary" />
                   <h3 className="font-semibold text-foreground">{category.name}</h3>
@@ -196,30 +195,32 @@ const Index = () => {
               </div>
             ))}
           </div>
-        </section>
+        </ScrollSection>
 
         {/* Footer */}
-        <footer className="rounded-2xl border bg-card p-6 text-center">
-          <div className="flex justify-center gap-6">
-            {[
-              { icon: Linkedin, href: "#", label: "LinkedIn" },
-              { icon: Github, href: "#", label: "GitHub" },
-              { icon: Twitter, href: "#", label: "X" },
-            ].map(({ icon: Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Icon size={22} />
-              </a>
-            ))}
-          </div>
-          <p className="mt-3 text-sm text-muted-foreground">
-            © 2026 Tu Nombre. Todos los derechos reservados.
-          </p>
-        </footer>
+        <ScrollSection>
+          <footer className="rounded-2xl border bg-card p-6 text-center">
+            <div className="flex justify-center gap-6">
+              {[
+                { icon: Linkedin, href: "#", label: "LinkedIn" },
+                { icon: Github, href: "#", label: "GitHub" },
+                { icon: Twitter, href: "#", label: "X" },
+              ].map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Icon size={22} />
+                </a>
+              ))}
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground">
+              © 2026 Tu Nombre. Todos los derechos reservados.
+            </p>
+          </footer>
+        </ScrollSection>
       </div>
     </div>
   );
