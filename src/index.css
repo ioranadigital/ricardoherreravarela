@@ -42,6 +42,9 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 221 83% 53%;
+
+    --font-body: 'Inter', sans-serif;
+    --font-display: 'Sora', sans-serif;
   }
 
   .dark {
@@ -90,6 +93,11 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
   }
 }
 
@@ -101,5 +109,17 @@
 
   .animate-cursor-blink {
     animation: typing-cursor 0.8s ease-in-out infinite;
+  }
+
+  /* Scroll fade-in */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+
+  .scroll-fade-in.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
