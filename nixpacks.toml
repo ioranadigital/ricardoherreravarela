@@ -1,0 +1,5 @@
+[build]
+cmds = ["pnpm install --frozen-lockfile"]
+
+[start]
+cmd = "pnpm run start"
