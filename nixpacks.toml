@@ -1,15 +1,9 @@
-[providers]
-name = "node"
-
-[variables]
-PNPM_HOME = "/root/.pnpm"
-PATH = "$PNPM_HOME:$PATH"
-
-[install]
-cmds = ["npm install -g pnpm", "pnpm install --frozen-lockfile"]
-
 [build]
-cmds = ["pnpm run build"]
+cmds = [
+  "npm install -g pnpm",
+  "pnpm install --frozen-lockfile",
+  "pnpm run build"
+]
 
 [start]
 cmd = "pnpm run start"
