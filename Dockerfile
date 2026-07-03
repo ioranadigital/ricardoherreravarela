@@ -1,26 +1,43 @@
-FROM node:18-alpine AS base
-RUN npm install -g pnpm
+# Build stage
+FROM node:20-alpine AS builder
+
 WORKDIR /app
 
-FROM base AS deps
+# Instalar pnpm
+RUN npm install -g pnpm@latest
+
+# Copiar dependencias
 COPY package.json pnpm-lock.yaml* ./
+
+# Instalar dependencias
 RUN pnpm install --frozen-lockfile
 
-FROM base AS builder
-COPY package.json pnpm-lock.yaml* ./
-COPY --from=deps /app/node_modules ./node_modules
+# Copiar código fuente
 COPY . .
+
+# Compilar Next.js (standalone output mode)
 RUN pnpm run build
 
-FROM node:18-alpine AS runtime
+# ============================================================================
+# Runtime stage - imagen mínima para producción
+FROM node:20-alpine AS runtime
+
 WORKDIR /app
-RUN npm install -g pnpm
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY package.json pnpm-lock.yaml* ./
-COPY node_modules ./node_modules
+
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Crear usuario no-root para seguridad
+RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+
+# Copiar solo artefactos necesarios del builder
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 
 EXPOSE 3000
-ENV NODE_ENV=production
+
 CMD ["node", "server.js"]

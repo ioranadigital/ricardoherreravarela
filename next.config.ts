@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Las redirecciones deben ir dentro de esta función async
+  output: "standalone",
+
   async redirects() {
     return [
       {
